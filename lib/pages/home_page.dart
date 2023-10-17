@@ -17,7 +17,9 @@ class _HomePageState extends State<HomePage> {
       body: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const NavBar(),
+          const NavBar(
+            selectedIndex: 0,
+          ),
           const Expanded(
               flex: 1,
               child: Padding(

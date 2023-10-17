@@ -4,7 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:wault/boxes.dart';
 import 'package:wault/database/user.dart';
-import 'package:wault/home_page.dart';
+import 'package:wault/pages/home_page.dart';
 import 'package:wault/numeric_stats/current_wallet/wallet_model.dart';
 
 const textColor = Color(0xFFffffff);
@@ -47,26 +47,62 @@ void main() async {
           name: 'Alex',
           expenseLimit: 6000,
           totalBalance: 2800,
-          totalExpense: 2200,
-          totalIncome: 5000,
+          totalExpense: 6750,
+          totalIncome: 13000,
           transactions: [
             {
               "description": "Travel",
               "time": "2023-10-01 13:27:00.000",
               "amount": "-700",
-              "balance": "4300"
+              "balance": "9300"
             },
             {
               "description": "Amazon",
-              "time": "2023-10-05 13:27:00.000",
+              "time": "2023-10-03 13:27:00.000",
               "amount": "-1000",
-              "balance": "3300"
+              "balance": "8300"
             },
             {
               "description": "Restaurent",
-              "time": "2023-10-10 13:27:00.000",
+              "time": "2023-10-05 13:27:00.000",
               "amount": "-500",
-              "balance": "2800"
+              "balance": "7800"
+            },
+            {
+              "description": "Taxi",
+              "time": "2023-10-07 13:27:00.000",
+              "amount": "-500",
+              "balance": "7300"
+            },
+            {
+              "description": "Arcade",
+              "time": "2023-10-09 13:27:00.000",
+              "amount": "-3000",
+              "balance": "4300"
+            },
+            {
+              "description": "Food",
+              "time": "2023-10-10 13:27:00.000",
+              "amount": "-50",
+              "balance": "4250"
+            },
+            {
+              "description": "Allowance",
+              "time": "2023-10-12 13:27:00.000",
+              "amount": "3000",
+              "balance": "7250"
+            },
+            {
+              "description": "Restaurent",
+              "time": "2023-10-14 13:27:00.000",
+              "amount": "-500",
+              "balance": "6750"
+            },
+            {
+              "description": "Groceries",
+              "time": "2023-10-14 13:27:00.000",
+              "amount": "-500",
+              "balance": "6250"
             },
           ]));
 

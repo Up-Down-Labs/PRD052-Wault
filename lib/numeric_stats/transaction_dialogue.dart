@@ -5,40 +5,52 @@ import 'package:provider/provider.dart';
 import 'package:wault/boxes.dart';
 import 'package:wault/numeric_stats/current_wallet/wallet_model.dart';
 
-bool _isIncome = true;
 final _formKey = GlobalKey<FormState>();
 final TextEditingController colorController = TextEditingController();
 
+enum Categories { allowance, dining, entertainment, groceries, travel }
+
 final List<DropdownMenuEntry<Object>> categories = [
   const DropdownMenuEntry(
-    value: "Groceries",
+    value: Categories.allowance,
+    label: "Allowance",
+    leadingIcon: Icon(Icons.money),
+  ),
+  const DropdownMenuEntry(
+    value: Categories.dining,
+    label: "Dining",
+    leadingIcon: Icon(Icons.dining),
+  ),
+  const DropdownMenuEntry(
+    value: Categories.entertainment,
+    label: "Entertainment",
+    leadingIcon: Icon(Icons.gamepad),
+  ),
+  const DropdownMenuEntry(
+    value: Categories.groceries,
     label: "Groceries",
     leadingIcon: Icon(Icons.local_grocery_store),
   ),
   const DropdownMenuEntry(
-    value: "Travel",
-    label: "Travel",
-    leadingIcon: Icon(Icons.flight),
-  ),
-  const DropdownMenuEntry(
-    value: "Rent",
-    label: "Rent",
-    leadingIcon: Icon(Icons.home),
-  ),
-  const DropdownMenuEntry(
-    value: "Dining",
-    label: "Dining",
-    leadingIcon: Icon(Icons.dining),
+    value: Categories.travel,
+    label: "Transport",
+    leadingIcon: Icon(Icons.subway),
   ),
 ];
 
+enum TransactionType { income, expense }
+
 void addTransactionDialogue(context, valueController, descriptionController) {
+  TransactionType choice = TransactionType.income;
   showDialog(
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (BuildContext context, setState) {
           return BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            filter: ImageFilter.blur(
+              sigmaX: 5,
+              sigmaY: 5,
+            ),
             child: AlertDialog(
                 content: SizedBox(
                   height: 270,
@@ -46,37 +58,26 @@ void addTransactionDialogue(context, valueController, descriptionController) {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ChoiceChip(
-                            selectedColor:
-                                Theme.of(context).colorScheme.secondary,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.inversePrimary,
-                            label: const Text("Income"),
-                            selected: _isIncome,
-                            onSelected: (value) {
-                              setState(() {
-                                _isIncome = !_isIncome;
-                              });
-                            },
-                          ),
-                          ChoiceChip(
-                            selectedColor:
-                                Theme.of(context).colorScheme.secondary,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.inversePrimary,
-                            label: const Text("Expense"),
-                            selected: _isIncome == false,
-                            onSelected: (value) {
-                              setState(() {
-                                _isIncome = !_isIncome;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
+                      SegmentedButton<TransactionType>(
+                          segments: const <ButtonSegment<TransactionType>>[
+                            ButtonSegment(
+                                value: TransactionType.income,
+                                label: Text('Income'),
+                                icon: Icon(Icons.arrow_upward)),
+                            ButtonSegment(
+                                value: TransactionType.expense,
+                                label: Text('Expense'),
+                                icon: Icon(Icons.arrow_downward)),
+                          ],
+                          selected: <TransactionType>{
+                            choice
+                          },
+                          onSelectionChanged:
+                              (Set<TransactionType> newSelection) {
+                            setState(() {
+                              choice = newSelection.first;
+                            });
+                          }),
                       const SizedBox(height: 20),
                       Form(
                         key: _formKey,
@@ -110,11 +111,7 @@ void addTransactionDialogue(context, valueController, descriptionController) {
                         controller: colorController,
                         label: const Text('Categories'),
                         dropdownMenuEntries: categories,
-                        onSelected: (value) {
-                          setState(() {
-                            //selectedColor = color;
-                          });
-                        },
+                        onSelected: (value) {},
                       )
                     ],
                   ),
@@ -137,7 +134,7 @@ void addTransactionDialogue(context, valueController, descriptionController) {
 
                             final value = double.parse(valueController.text);
 
-                            if (_isIncome) {
+                            if (choice == TransactionType.income) {
                               userData.totalIncome += value;
                               userData.totalBalance += value;
                             } else {
@@ -146,10 +143,11 @@ void addTransactionDialogue(context, valueController, descriptionController) {
                             }
 
                             userData.transactions.add({
-                              "amount":
-                                  _isIncome ? value.toString() : "-$value",
+                              "amount": choice == TransactionType.income
+                                  ? value.toString()
+                                  : "-$value",
                               "time": "${DateTime.now()}",
-                              "category": "shopping",
+                              "category": "Shopping",
                               "description": descriptionController.text,
                               "balance": userData.totalBalance.toString()
                             });
